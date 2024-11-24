@@ -1,9 +1,19 @@
+import { useRef } from "react";
+import { CartContextProvider } from "./context/CartContext";
+import Header from "./components/Header";
+import Products from "./components/Products";
+import Modal from "./components/Modal";
+import Cart from "./components/Cart";
+
 function App() {
+
+
   return (
     <>
-      <h1>You got this 💪</h1>
-      <p>Stuck? Not sure how to proceed?</p>
-      <p>Don't worry - we've all been there. Let's build it together!</p>
+      <CartContextProvider>
+        <Header />
+        <Products />
+      </CartContextProvider>
     </>
   );
 }
