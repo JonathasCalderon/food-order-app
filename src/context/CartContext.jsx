@@ -10,11 +10,19 @@ function CartContextProvider({ children }) {
     const existingItemIndex = cartItems.findIndex(cartItem => cartItem.id === item.id)
     const existingItem = cartItems[existingItemIndex]
     if (existingItem) {
-      const addedItem = {
-        ...existingItem,
-        quantity: existingItem.quantity + 1
-      }
-      setCartItems(prev => [...prev, prev[existingItemIndex] = addedItem])
+      //  const addedItem = {
+      //    ...existingItem,
+      //    quantity: existingItem.quantity + 1
+      //  }
+      setCartItems(prev => prev.map(cartItem => {
+        if (cartItem.id === item.id) {
+          return {
+            ...cartItem,
+            quantity: cartItem.quantity + 1
+          }
+        }
+        return cartItem
+      }))
     }
     else {
       const newItem = {
@@ -27,19 +35,18 @@ function CartContextProvider({ children }) {
     }
   }
 
-  function updateItemQuantity(itemId, willAdd) {
-    const existingItemIndex = cartItems.findIndex(cartItem => cartItem.id === itemId);
-
-    const existingItem = {
-      ...cartItems[existingItemIndex]
-    };
-
-    existingItem.quantity = willAdd ? existingItem.quantity + 1 : existingItem.quantity - 1;
-
-    if (existingItem.quantity <= 0) {
-      setCartItems(prev => prev.splice(existingItemIndex, 1))
+  function updateItemQuantity(item, willAdd) {
+    if (item.quantity <= 1 && !willAdd) {
+      setCartItems(cartItems.filter(cartItem => cartItem.id !== item.id))
     } else {
-      setCartItems([...cartItems, cartItems[existingItemIndex] = existingItem])
+      setCartItems(prev => prev.map(cartItem => {
+        if (cartItem.id === item.id) {
+          return {
+            ...cartItem,
+            quantity: willAdd ? cartItem.quantity + 1 : cartItem.quantity - 1
+          }
+        }
+      }))
     }
   }
 
